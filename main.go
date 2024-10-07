@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -13,5 +16,12 @@ func main() {
 		response := map[string]string{"message": "Hello"}
 		json.NewEncoder(w).Encode(response)
 	})
-	log.Fatal(http.ListenAndServe(":8082", nil))
+	godotenv.Load(".env")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Printf("Server starting on port %s...", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
